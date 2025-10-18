@@ -57,32 +57,6 @@ describe('KeyboardController', () => {
     Mousetrap.reset();
   });
 
-  describe('should load keyboard controller based on the keyboard shortcut preference', () => {
-    const mockWagtailConfig = require('../config/wagtailConfig');
-
-    afterEach(() => {
-      mockWagtailConfig.WAGTAIL_CONFIG = {
-        KEYBOARD_SHORTCUTS_ENABLED: true,
-      };
-    });
-
-    it('should return true when KEYBOARD_SHORTCUTS_ENABLED is true', () => {
-      mockWagtailConfig.WAGTAIL_CONFIG = {
-        KEYBOARD_SHORTCUTS_ENABLED: true,
-      };
-
-      expect(KeyboardController.shouldLoad).toBe(true);
-    });
-
-    it('should return false when KEYBOARD_SHORTCUTS_ENABLED is false', () => {
-      mockWagtailConfig.WAGTAIL_CONFIG = {
-        KEYBOARD_SHORTCUTS_ENABLED: false,
-      };
-
-      expect(KeyboardController.shouldLoad).toBe(false);
-    });
-  });
-
   describe('basic keyboard shortcut usage', () => {
     it('should call the click event when the `j` key is pressed after being registered', async () => {
       expect(buttonClickMock).not.toHaveBeenCalled();

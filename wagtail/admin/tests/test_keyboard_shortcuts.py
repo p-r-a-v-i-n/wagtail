@@ -1,6 +1,7 @@
 import json
 import re
 
+from django.template.loader import render_to_string
 from django.test import RequestFactory, TestCase, override_settings
 from django.test.client import Client
 from django.urls import reverse
@@ -66,6 +67,50 @@ class TestGetKeyboardKeyLabelsFromRequestUtil(TestCase):
 class TestKeyboardShortcutsDialog(WagtailTestUtils, TestCase):
     def setUp(self):
         self.login()
+
+    def render_modal(self, keyboard_shortcuts_enabled=True, comments_enabled=False):
+        """
+        Helper to render the keyboard shortcuts dialog template with various settings.
+        """
+        context = {
+            "keyboard_shortcuts_enabled": keyboard_shortcuts_enabled,
+            "WAGTAILADMIN_COMMENTS_ENABLED": comments_enabled,
+            "account_link": "<a>Account</a>",
+        }
+        return render_to_string(
+            "wagtailadmin/shared/keyboard_shortcuts_dialog.html", context
+        )
+
+    def test_account_link_in_modal(self):
+        """
+        Test that the 'Account' link fragment is correctly rendered in the
+        keyboard shortcuts modal.
+        """
+        response = self.client.get(reverse("wagtailadmin_home"))
+        self.assertEqual(response.status_code, 200)
+
+        soup = self.get_soup(response.content)
+        shortcuts_dialog = soup.select_one("#keyboard-shortcuts-dialog")
+        self.assertIsNotNone(shortcuts_dialog)
+
+        account_link = shortcuts_dialog.select_one("a[href$='account/']")
+        self.assertIsNotNone(account_link)
+        self.assertEqual(account_link.text.strip(), "Account")
+        self.assertIn("w-underline", account_link.get("class", []))
+
+    def test_modal_shows_disabled_info_when_keyboard_shortcuts_disabled(self):
+        """
+        Modal should open and show warning if keyboard shortcuts are disabled.
+        """
+        html = self.render_modal(keyboard_shortcuts_enabled=False)
+        self.assertIn("Keyboard shortcuts are currently disabled", html)
+
+    def test_modal_shows_enabled_info_when_shortcuts_enabled(self):
+        """
+        Modal should show normal info when keyboard shortcuts are enabled.
+        """
+        html = self.render_modal(keyboard_shortcuts_enabled=True)
+        self.assertIn("Keyboard shortcuts are currently enabled", html)
 
     def test_keyboard_shortcuts_trigger_in_sidebar(self):
         response = self.client.get(reverse("wagtailadmin_home"))

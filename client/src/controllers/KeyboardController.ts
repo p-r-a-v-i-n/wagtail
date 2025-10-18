@@ -4,7 +4,7 @@ import Mousetrap from 'mousetrap';
 // import with side-effect to add global-bind plugin (see https://github.com/ccampbell/mousetrap/tree/master/plugins/global-bind)
 import 'mousetrap/plugins/global-bind/mousetrap-global-bind';
 
-import { WAGTAIL_CONFIG } from '../config/wagtailConfig';
+// import { WAGTAIL_CONFIG } from '../config/wagtailConfig';
 import { forceFocus } from '../utils/forceFocus';
 
 export enum KeyboardAction {
@@ -79,7 +79,7 @@ export class KeyboardController extends Controller<
    * If custom keyboard shortcuts are disabled by user in settings then controller will not be loaded.
    */
   static get shouldLoad() {
-    return !!WAGTAIL_CONFIG.KEYBOARD_SHORTCUTS_ENABLED;
+    return true;
   }
 
   /**
