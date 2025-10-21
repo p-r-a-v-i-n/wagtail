@@ -294,3 +294,7 @@ $draftail-block-hoverable-area-offset: 40px;
 .DraftEditor-editorContainer {
   border: 0;
 }
+
+.DraftEditor-root.dictation-active .public-DraftEditorPlaceholder-inner {
+  display: none !important;
+}

@@ -304,6 +304,20 @@ const initEditor = (selector, originalOptions, currentScript) => {
     editorWrapper,
   );
 
+  const editorNode = editorWrapper.querySelector('.DraftEditor-root');
+
+  if (editorNode) {
+    const handleCompositionStart = () => {
+      editorNode.classList.add('dictation-active');
+    };
+    const handleCompositionEnd = () => {
+      editorNode.classList.remove('dictation-active');
+    };
+
+    editorNode.addEventListener('compositionstart', handleCompositionStart);
+    editorNode.addEventListener('compositionend', handleCompositionEnd);
+  }
+
   return [options, setOptions];
 };
 
